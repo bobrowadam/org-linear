@@ -1,0 +1,25 @@
+#+TITLE: org-linear
+#+AUTHOR: Bob
+
+* org-linear
+
+A simple Emacs package that integrates Linear.app issues with Org mode.
+
+** Features
+- Fetches your active Linear tasks using the Linear API
+- Converts Linear issues to Org mode format
+- Maps Linear issue states to Org TODO states
+- Automatically updates your Org agenda with Linear tasks
+
+** Requirements
+- Emacs with Org mode
+- Bun runtime
+- Linear API key
+
+** Usage
+1. Set your Linear API key as an environment variable
+2. Call ~bob/update-linear-issues~ to fetch and update your tasks
+3. Your Linear issues will be exported to an Org file in your ~org-directory~
+
+** License
+MIT

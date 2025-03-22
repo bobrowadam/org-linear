@@ -1,0 +1,14 @@
+{
+  "name": "org-linear",
+  "module": "index.ts",
+  "type": "module",
+  "devDependencies": {
+    "@types/bun": "^1.1.6"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@linear/sdk": "^24.0.0"
+  }
+}
