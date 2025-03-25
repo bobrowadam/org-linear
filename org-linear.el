@@ -102,12 +102,13 @@
 (defun linear/update-linear-issues ()
   "Update the linear org agenda file."
   (interactive)
-  (make-process
-   :name "bun-process"
-   :buffer *linear-output-buffer-name*
-   :command '("bun" "index.ts" "run")
-   :filter #'bun-process-filterlambda
-   :sentinel #'bun-process-sentinel))
+  (bob/with-default-dir (file-name-directory (locate-library "org-linear"))
+    (make-process
+     :name "bun-process"
+     :buffer *linear-output-buffer-name*
+     :command '("bun" "index.ts" "run")
+     :filter #'bun-process-filterlambda
+     :sentinel #'bun-process-sentinel)))
 
 (defun linear/state-to-todo (state)
   "Map linear issue STATE to org toto item."
