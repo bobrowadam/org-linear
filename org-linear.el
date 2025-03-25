@@ -5,6 +5,7 @@
 
 (setenv "LINEAR_API_KEY" (exec-path-from-shell-getenv "LINEAR_API_KEY"))
 
+(defconst *linear-output-buffer-name* "*linear-output*")
 (defun linear/to-org-mode-ast (linear-issues)
   "LINEAR-ISSUES are a alist representation of the linear issues."
   (mapcar (lambda (issue)
@@ -75,11 +76,38 @@
                                    ,(when description
                                       `(headline (:level 2 :title ,description)
                                                  (section nil ()))))))))
+(defun bun-process-filterlambda (process output)
+  "Filter the bun PROCESS OUTPUT and apply ansi color."
+  (when (buffer-live-p (process-buffer process))
+    (with-current-buffer (process-buffer process)
+      (let ((moving (= (point) (process-mark process))))
+        (save-excursion
+          ;; Insert the colorized text
+          (goto-char (process-mark process))
+          (insert (xterm-color-filter output))
+          (set-marker (process-mark process) (point)))
+        ;; If point was at the end, move it to the new end
+        (if moving (goto-char (process-mark process)))))))
+
+(defun bun-process-sentinel (process _event)
+  "Handle PROCESS exit."
+  (let ((status (process-status process))
+        (exit-code (process-exit-status process)))
+    (when (eq status 'exit)
+      (if (= exit-code 0)
+          (message "Process completed successfully")
+        (error "Process failed with exit code %d" exit-code)))))
+
 ;;;###autoload
 (defun linear/update-linear-issues ()
   "Update the linear org agenda file."
   (interactive)
-  (call-process "bun" nil "*linear-output*" t "index.ts" "run"))
+  (make-process
+   :name "bun-process"
+   :buffer *linear-output-buffer-name*
+   :command '("bun" "index.ts" "run")
+   :filter #'bun-process-filterlambda
+   :sentinel #'bun-process-sentinel))
 
 (defun linear/state-to-todo (state)
   "Map linear issue STATE to org toto item."

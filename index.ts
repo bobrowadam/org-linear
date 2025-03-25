@@ -41,10 +41,16 @@ async function toOrgNode({
     identifier,
   };
 }
-const myIssueStates = await getMyIssues().catch((e) =>
-  console.log(`Error while fetching issues: ${e}`),
-);
-const formatedIssues = JSON.stringify(myIssueStates, null, 2);
-console.log(`Successfully fetched my issues: ${formatedIssues}`);
 
-Bun.write("linear-output.json", formatedIssues);
+await getMyIssues()
+  .then((myIssueStates) => {
+    const formatedIssues = JSON.stringify(myIssueStates, null, 2);
+    console.log(`Successfully fetched my issues: ${formatedIssues}`);
+
+    Bun.write("linear-output.json", formatedIssues);
+    process.exit(0);
+  })
+  .catch((e) => {
+    console.log(`Error while fetching issues: ${e}`);
+    process.exit(1);
+  });
