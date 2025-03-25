@@ -18,13 +18,13 @@
     (-> (cl-coerce (json-parse-string (read-file "./linear-output.json")
                                       :object-type 'alist)
                    'list)
-        linear-json-to-org-ast
+        linear/json-to-org-ast
         org-element-interpret-data
         (f-write-text 'utf-8 (format "%slinear.org" org-directory)))
 
     (message "Done exporting linear issues to org file")))
 
-(defun linear-json-to-org-ast (linear-issues)
+(defun linear/json-to-org-ast (linear-issues)
   "Convert LINEAR-ISSUES JSON to org AST."
   (mapcar (lambda (issue)
             (linear/issue-to-org issue))
@@ -76,7 +76,7 @@
                                    ,(when description
                                       `(headline (:level 2 :title ,description)
                                                  (section nil ()))))))))
-(defun bun-process-filterlambda (process output)
+(defun linear/bun--process-filter (process output)
   "Filter the bun PROCESS OUTPUT and apply ansi color."
   (when (buffer-live-p (process-buffer process))
     (with-current-buffer (process-buffer process)
@@ -89,12 +89,13 @@
         ;; If point was at the end, move it to the new end
         (if moving (goto-char (process-mark process)))))))
 
-(defun bun-process-sentinel (process _event)
+(defun linear/bun--process-sentinel (process _event)
   "Handle PROCESS exit."
   (let ((status (process-status process))
         (exit-code (process-exit-status process)))
     (when (eq status 'exit)
       (if (= exit-code 0)
+          (linear/export-to-org-file)
           (message "Process completed successfully")
         (error "Process failed with exit code %d" exit-code)))))
 
@@ -107,8 +108,8 @@
      :name "bun-process"
      :buffer *linear-output-buffer-name*
      :command '("bun" "index.ts" "run")
-     :filter #'bun-process-filterlambda
-     :sentinel #'bun-process-sentinel)))
+     :filter #'linear/bun--process-filter
+     :sentinel #'linear/bun--process-sentinel)))
 
 (defun linear/state-to-todo (state)
   "Map linear issue STATE to org toto item."
