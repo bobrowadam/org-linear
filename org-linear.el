@@ -19,6 +19,12 @@
             ())
           linear-issues))
 
+(defun linear/json-to-org-ast (linear-issues)
+  "Convert LINEAR-ISSUES JSON to org AST."
+  (mapcar (lambda (issue)
+            (linear/issue-to-org issue))
+          linear-issues))
+
 (defun linear/export-to-org-file ()
   "Export the linear-output.json file to a linear.org."
   (progn
@@ -30,12 +36,6 @@
         (f-write-text 'utf-8 (format "%slinear.org" org-directory)))
 
     (message "Done exporting linear issues to org file")))
-
-(defun linear/json-to-org-ast (linear-issues)
-  "Convert LINEAR-ISSUES JSON to org AST."
-  (mapcar (lambda (issue)
-            (linear/issue-to-org issue))
-          linear-issues))
 
 (defun linear/decode-date (time-string)
   "Parse the TIME-STRING into an `org-mode' element `time-stamp'(year month day)."
