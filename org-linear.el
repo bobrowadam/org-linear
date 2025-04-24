@@ -49,7 +49,7 @@
         (scheduled (alist-get 'scheduled issue))
         (url (alist-get 'url issue)))
     `(headline ( :level 1
-                 :title ,title
+                 :title ,(format "[%s] - %s" linear-id title)
                  :todo-keyword ,(linear/state-to-todo issue-state)
                  :todo-type todo)
                (planning ( :deadline (timestamp
