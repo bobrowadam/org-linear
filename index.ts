@@ -48,6 +48,7 @@ await getMyIssues()
     console.log(`Successfully fetched my issues: ${formatedIssues}`);
 
     Bun.write("linear-output.json", formatedIssues);
+    console.log('Wrote "linear-output.json" file');
     process.exit(0);
   })
   .catch((e) => {
