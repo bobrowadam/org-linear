@@ -2,13 +2,16 @@
 ;;; Commentary:
 ;; This package is responsible for parsing the linear issues json file
 ;;; Code:
+(require 'f)
+(require 'dash)
+(require 'xterm-color)
 
 (setenv "LINEAR_API_KEY" (exec-path-from-shell-getenv "LINEAR_API_KEY"))
 
 (defconst *linear-output-buffer-name* "*linear-output*")
 
 (defmacro with-default-dir (directory &rest body)
-  "Evaluate BODY with 'default-dir' as DIRECTORY. keymap is \\{typescript-ts-mode-map}"
+  "Evaluate BODY with `default-dir' as DIRECTORY. keymap is \\{typescript-ts-mode-map}"
   (declare (indent 1) (debug t))
   `(let ((default-directory ,directory))
      ,@body))
@@ -22,7 +25,7 @@
 
 (defun linear/to-org-mode-ast (linear-issues)
   "LINEAR-ISSUES are a alist representation of the linear issues."
-  (mapcar (lambda (issue)
+  (mapcar (lambda (_)
             ())
           linear-issues))
 
@@ -40,7 +43,7 @@
                    'list)
         linear/json-to-org-ast
         org-element-interpret-data
-        (f-write-text 'utf-8 (format "%slinear.org" org-directory)))
+        (f-write-text 'utf-8 (format "%slinear.org" (if (boundp 'org-directory) org-directory "~/.emacs.d/org/"))))
 
     (message "Done exporting linear issues to org file")))
 
