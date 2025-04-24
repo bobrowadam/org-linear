@@ -13,6 +13,13 @@
   `(let ((default-directory ,directory))
      ,@body))
 
+(defun read-file (file-name)
+  "Return the contents of FILE-NAME as a lisp data type."
+  (when (file-exists-p file-name)
+   (with-temp-buffer
+     (insert-file-contents file-name)
+     (buffer-string))))
+
 (defun linear/to-org-mode-ast (linear-issues)
   "LINEAR-ISSUES are a alist representation of the linear issues."
   (mapcar (lambda (issue)
