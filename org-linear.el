@@ -95,7 +95,8 @@
         (exit-code (process-exit-status process)))
     (when (eq status 'exit)
       (if (= exit-code 0)
-          (linear/export-to-org-file)
+          (bob/with-default-dir (file-name-directory (locate-library "org-linear"))
+            (linear/export-to-org-file-δ))
           (message "Process completed successfully")
         (error "Process failed with exit code %d" exit-code)))))
 
