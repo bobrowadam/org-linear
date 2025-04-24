@@ -102,7 +102,7 @@
         (exit-code (process-exit-status process)))
     (when (eq status 'exit)
       (if (= exit-code 0)
-          (bob/with-default-dir (file-name-directory (locate-library "org-linear"))
+          (with-default-dir (file-name-directory (locate-library "org-linear"))
             (linear/export-to-org-file))
           (message "Process completed successfully")
         (error "Process failed with exit code %d" exit-code)))))
@@ -111,7 +111,7 @@
 (defun linear/update-linear-issues ()
   "Update the linear org agenda file."
   (interactive)
-  (bob/with-default-dir (file-name-directory (locate-library "org-linear"))
+  (with-default-dir (file-name-directory (locate-library "org-linear"))
     (make-process
      :name "bun-process"
      :buffer *linear-output-buffer-name*
