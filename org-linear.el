@@ -6,6 +6,13 @@
 (setenv "LINEAR_API_KEY" (exec-path-from-shell-getenv "LINEAR_API_KEY"))
 
 (defconst *linear-output-buffer-name* "*linear-output*")
+
+(defmacro with-default-dir (directory &rest body)
+  "Evaluate BODY with 'default-dir' as DIRECTORY. keymap is \\{typescript-ts-mode-map}"
+  (declare (indent 1) (debug t))
+  `(let ((default-directory ,directory))
+     ,@body))
+
 (defun linear/to-org-mode-ast (linear-issues)
   "LINEAR-ISSUES are a alist representation of the linear issues."
   (mapcar (lambda (issue)
