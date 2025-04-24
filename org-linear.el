@@ -96,7 +96,7 @@
     (when (eq status 'exit)
       (if (= exit-code 0)
           (bob/with-default-dir (file-name-directory (locate-library "org-linear"))
-            (linear/export-to-org-file-δ))
+            (linear/export-to-org-file))
           (message "Process completed successfully")
         (error "Process failed with exit code %d" exit-code)))))
 
@@ -108,7 +108,7 @@
     (make-process
      :name "bun-process"
      :buffer *linear-output-buffer-name*
-     :command '("bun" "index.ts" "run")
+     :command '("bun" "run" "index.ts")
      :filter #'linear/bun--process-filter
      :sentinel #'linear/bun--process-sentinel)))
 
