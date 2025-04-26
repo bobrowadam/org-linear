@@ -32,7 +32,7 @@ async function toOrgNode({
 }: Issue) {
   return {
     title,
-    description,
+    description: formatDescription(description),
     createdAt,
     state: (await state)?.name,
     deadline: (await cycle)?.endsAt,
@@ -55,3 +55,7 @@ await getMyIssues()
     console.log(`Error while fetching issues: ${e}`);
     process.exit(1);
   });
+
+function formatDescription(description: string | undefined) {
+  return description?.replaceAll(/^\*(\s*)/gm, " *$1");
+}
