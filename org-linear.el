@@ -47,6 +47,8 @@
 
     (message "Done exporting linear issues to org file")))
 
+(defun linear/format-description (desc)
+  (format "Description:\n%s" desc))
 (defun linear/decode-date (time-string)
   "Parse the TIME-STRING into an `org-mode' element `time-stamp'(year month day)."
   (let ((time (parse-time-string time-string)))
@@ -91,7 +93,7 @@
                                    ,(format "linear-id: %s" linear-id)
                                    "\n"
                                    ,(when description
-                                      `(headline (:level 2 :title ,description)
+                                      `(headline (:level 2 :title ,(linear/format-description description))
                                                  (section nil ()))))))))
 (defun linear/bun--process-filter (process output)
   "Filter the bun PROCESS OUTPUT and apply ansi color."
