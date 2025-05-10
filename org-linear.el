@@ -116,8 +116,8 @@
       (if (= exit-code 0)
           (with-default-dir (file-name-directory (locate-library "org-linear"))
             (linear/export-to-org-file))
-          (message "Process completed successfully")
-        (error "Process failed with exit code %d" exit-code)))))
+          (message "Linear Process completed successfully")
+        (error "Linear Process failed with exit code %d" exit-code)))))
 
 ;;;###autoload
 (defun linear/update-linear-issues ()
