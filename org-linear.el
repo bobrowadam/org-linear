@@ -1,33 +1,31 @@
-;;; org-linear.el --- summary -*- lexical-binding: t -*-
+;;; org-linear.el --- Integration of Linear issues with Org mode -*- lexical-binding: t -*-
 ;;; Commentary:
-;; This package is responsible for parsing the linear issues json file
+;; This package is responsible for parsing the Linear issues JSON file and converting them to Org mode format.
+
 ;;; Code:
+(require 'exec-path-from-shell)
 (require 'f)
 (require 'dash)
 (require 'xterm-color)
+(require 'org)
 
 (setenv "LINEAR_API_KEY" (exec-path-from-shell-getenv "LINEAR_API_KEY"))
 
-(defconst *linear-output-buffer-name* "*linear-output*")
+(defconst *linear-output-buffer-name* "*linear-output*"
+  "Buffer name for Linear output.")
 
 (defmacro with-default-dir (directory &rest body)
-  "Evaluate BODY with `default-dir' as DIRECTORY. keymap is \\{typescript-ts-mode-map}"
+  "Evaluate BODY with `default-dir' as DIRECTORY.  Keymap is \\{typescript-ts-mode-map}."
   (declare (indent 1) (debug t))
   `(let ((default-directory ,directory))
      ,@body))
 
 (defun read-file (file-name)
-  "Return the contents of FILE-NAME as a lisp data type."
+  "Return the contents of FILE-NAME as a Lisp data type."
   (when (file-exists-p file-name)
-   (with-temp-buffer
-     (insert-file-contents file-name)
-     (buffer-string))))
-
-(defun linear/to-org-mode-ast (linear-issues)
-  "LINEAR-ISSUES are a alist representation of the linear issues."
-  (mapcar (lambda (_)
-            ())
-          linear-issues))
+    (with-temp-buffer
+      (insert-file-contents file-name)
+      (buffer-string))))
 
 (defun linear/json-to-org-ast (linear-issues)
   "Convert LINEAR-ISSUES JSON to org AST."
@@ -45,10 +43,12 @@
         org-element-interpret-data
         (f-write-text 'utf-8 (format "%slinear.org" (if (boundp 'org-directory) org-directory "~/.emacs.d/org/"))))
 
-    (message "Done exporting linear issues to org file")))
+    (message "Done exporting Linear issues to Org file")))
 
 (defun linear/format-description (desc)
+  "Format DESC as a description string."
   (format "Description:\n%s" desc))
+
 (defun linear/decode-date (time-string)
   "Parse the TIME-STRING into an `org-mode' element `time-stamp'(year month day)."
   (let ((time (parse-time-string time-string)))
@@ -96,7 +96,7 @@
                                       `(headline (:level 2 :title ,(linear/format-description description))
                                                  (section nil ()))))))))
 (defun linear/bun--process-filter (process output)
-  "Filter the bun PROCESS OUTPUT and apply ansi color."
+  "Filter the bun PROCESS OUTPUT and apply ANSI color."
   (when (buffer-live-p (process-buffer process))
     (with-current-buffer (process-buffer process)
       (let ((moving (= (point) (process-mark process))))
@@ -121,7 +121,7 @@
 
 ;;;###autoload
 (defun linear/update-linear-issues ()
-  "Update the linear org agenda file."
+  "Update the Linear Org agenda file."
   (interactive)
   (with-default-dir (file-name-directory (locate-library "org-linear"))
     (make-process
@@ -132,7 +132,7 @@
      :sentinel #'linear/bun--process-sentinel)))
 
 (defun linear/state-to-todo (state)
-  "Map linear issue STATE to org toto item."
+  "Map Linear issue STATE to Org TODO item."
   (pcase state
     ("PR" "WAITING")
     ("In Progress" "NEXT")
