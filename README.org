@@ -10,6 +10,7 @@ A simple Emacs package that integrates Linear.app issues with Org mode.
 - Converts Linear issues to Org mode format
 - Maps Linear issue states to Org TODO states
 - Automatically updates your Org agenda with Linear tasks
+- Preserves parent-child relationships between tasks as nested headings
 
 ** Requirements
 - Emacs with Org mode
@@ -20,6 +21,7 @@ A simple Emacs package that integrates Linear.app issues with Org mode.
 1. Set your Linear API key as an environment variable
 2. Call ~bob/update-linear-issues~ to fetch and update your tasks
 3. Your Linear issues will be exported to an Org file in your ~org-directory~
+4. Child tasks will be nested under their parent tasks in the org file
 
 ** License
 MIT

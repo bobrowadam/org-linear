@@ -29,7 +29,10 @@ async function toOrgNode({
   cycle,
   url,
   identifier,
+  parent,
 }: Issue) {
+  const parentIssue = await parent;
+
   return {
     title,
     description: formatDescription(description),
@@ -39,6 +42,7 @@ async function toOrgNode({
     scheduled: (await cycle)?.startsAt,
     url,
     identifier,
+    parentId: parentIssue ? parentIssue.identifier : null,
   };
 }
 
