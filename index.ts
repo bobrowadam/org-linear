@@ -26,20 +26,21 @@ async function toOrgNode({
   description,
   createdAt,
   state,
-  cycle,
+  cycle: cyclePromise,
   url,
   identifier,
   parent,
 }: Issue) {
   const parentIssue = await parent;
-
+  const cycle = await cyclePromise;
   return {
     title,
     description: formatDescription(description),
     createdAt,
     state: (await state)?.name,
-    deadline: (await cycle)?.endsAt,
-    scheduled: (await cycle)?.startsAt,
+    deadline: cycle?.endsAt,
+    scheduled: cycle?.startsAt,
+    cycleNumber: cycle?.number,
     url,
     identifier,
     parentId: parentIssue ? parentIssue.identifier : null,
