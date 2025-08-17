@@ -9,7 +9,9 @@ async function getMyIssues() {
   const me = await linearClient.viewer;
   const myIssues = await me.assignedIssues({
     filter: {
-      state: { type: { neq: "completed" } },
+      state: {
+        and: [{ type: { neq: "completed" } }, { type: { neq: "canceled" } }],
+      },
       cycle: { isActive: { eq: true } },
     },
   });
